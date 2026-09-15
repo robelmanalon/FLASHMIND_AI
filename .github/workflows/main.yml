@@ -105,19 +105,23 @@ jobs:
 
       # ----------------------------------------------------------
       # 11. Rename the generated APK
+      # Runs in frontend/ (from defaults), so the source path is
+      # relative to the Capacitor android folder.
       # ----------------------------------------------------------
-      - name: FlashMindAI.apk
+      - name: Rename APK to FlashMindAI.apk
         run: |
-          cp frontend/android/app/build/outputs/apk/debug/app-debug.apk FlashMindAI.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk FlashMindAI.apk
 
 
       # ----------------------------------------------------------
       # 12. Upload APK to GitHub Actions
+      # upload-artifact paths are relative to the workspace root,
+      # so the copied file lives at frontend/FlashMindAI.apk
       # ----------------------------------------------------------
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FlashMindAI-APK
-          path: FlashMindAI.apk
+          path: frontend/FlashMindAI.apk
           if-no-files-found: error
           retention-days: 30
