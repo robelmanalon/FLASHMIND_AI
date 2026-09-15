@@ -1,0 +1,5 @@
+<script setup>
+defineProps({ progress: { type: Object, required: true } })
+</script>
+
+<template><section class="glass rounded-2xl p-6"><div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.18em] text-purple-300">Today's progress</p><h2 class="mt-3 text-xl font-bold text-white">{{ progress.completed }} / {{ progress.goal }} cards</h2></div><span class="text-2xl text-purple-300">✦</span></div><div class="mt-7 grid grid-cols-[auto_1fr] items-center gap-5"><div class="grid h-20 w-20 place-items-center rounded-full" :style="{ background: `conic-gradient(#a78bfa ${(progress.completed / progress.goal) * 100}%, #272b42 0)` }"><div class="grid h-14 w-14 place-items-center rounded-full bg-[#111522] text-sm font-bold text-white">{{ Math.round((progress.completed / progress.goal) * 100) }}%</div></div><div class="space-y-2 text-sm"><p class="text-slate-300"><span class="font-bold text-white">{{ progress.minutes }} min</span> study time</p><p class="text-slate-400"><span class="font-bold text-white">{{ progress.sessions }}</span> sessions completed</p></div></div></section></template>

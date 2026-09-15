@@ -1,0 +1,5 @@
+<script setup>
+defineProps({ session: { type: Object, required: true } })
+</script>
+
+<template><section class="glass rounded-2xl p-6"><div class="flex items-start justify-between gap-4"><div><p class="text-xs font-bold uppercase tracking-[.18em] text-cyan-300">Continue studying</p><h2 class="mt-3 text-xl font-bold text-white">{{ session.title }}</h2><p class="mt-1 text-sm text-slate-400">{{ session.subtitle }}</p></div><span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-400/10 text-indigo-300">◷</span></div><div class="mt-7 flex items-center justify-between text-xs text-slate-500"><span>{{ session.remaining }} cards remaining</span><span>{{ session.progress }}% complete</span></div><div class="mt-3 h-2 rounded-full bg-white/10"><div class="h-full rounded-full bg-gradient-to-r from-indigo-400 to-cyan-300" :style="{ width: `${session.progress}%` }"></div></div><button class="mt-6 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/20">Resume session →</button></section></template>

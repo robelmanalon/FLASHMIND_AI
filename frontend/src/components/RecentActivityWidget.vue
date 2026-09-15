@@ -1,0 +1,5 @@
+<script setup>
+defineProps({ activity: { type: Array, required: true } })
+</script>
+
+<template><section class="glass rounded-2xl p-6"><div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-[.18em] text-purple-300">Timeline</p><h2 class="mt-3 text-xl font-bold text-white">Recent activity</h2></div><button class="text-xs font-bold text-cyan-300">See all</button></div><div class="mt-5 divide-y divide-white/5"><div v-for="item in activity" :key="item.id" class="flex gap-3 py-3 first:pt-0 last:pb-0"><span :class="['grid h-9 w-9 shrink-0 place-items-center rounded-xl', item.tone === 'cyan' ? 'bg-cyan-400/10 text-cyan-300' : item.tone === 'purple' ? 'bg-purple-400/10 text-purple-300' : 'bg-indigo-400/10 text-indigo-300']">{{ item.icon }}</span><div class="min-w-0 flex-1"><p class="truncate text-sm font-semibold text-slate-200">{{ item.title }}</p><p class="truncate text-xs text-slate-500">{{ item.detail }}</p></div><span class="whitespace-nowrap text-[11px] text-slate-600">{{ item.time }}</span></div></div></section></template>

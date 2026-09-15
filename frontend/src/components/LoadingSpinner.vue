@@ -1,0 +1,1 @@
+<template><span class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-cyan-300" aria-label="Loading"></span></template>

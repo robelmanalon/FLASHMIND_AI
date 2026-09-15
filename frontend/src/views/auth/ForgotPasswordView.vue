@@ -1,0 +1,5 @@
+<script setup>
+import AuthLayout from './AuthLayout.vue'
+</script>
+
+<template><AuthLayout><p class="text-sm font-semibold text-cyan-300">Account recovery</p><h1 class="mt-2 text-3xl font-bold text-white">Reset your password</h1><p class="mt-3 text-sm leading-6 text-slate-400">Enter your email and we’ll send you a secure reset link.</p><form class="mt-8 space-y-5" @submit.prevent><label class="block text-sm font-semibold text-slate-300">Email address<input type="email" placeholder="you@example.com" class="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-600 focus:border-cyan-300/60"></label><button class="w-full rounded-xl bg-indigo-500 py-3.5 font-bold text-white shadow-lg shadow-indigo-500/20">Send reset link</button></form><p class="mt-7 text-center text-sm text-slate-500"><RouterLink to="/login" class="font-bold text-white">← Back to sign in</RouterLink></p></AuthLayout></template>
