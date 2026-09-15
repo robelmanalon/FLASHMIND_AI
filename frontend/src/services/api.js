@@ -5,11 +5,32 @@ function authHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+function handleSessionExpired() {
+  localStorage.removeItem('flashmind-token')
+  localStorage.removeItem('flashmind-user')
+  if (!window.location.pathname.startsWith('/login')) {
+    window.location.href = '/login'
+  }
+}
+
 async function request(path, options = {}) {
   const headers = { ...authHeaders(), ...options.headers }
-  const response = await fetch(`${API_URL}${path}`, { ...options, headers })
-  const payload = await response.json()
-  if (!response.ok) throw new Error(payload.detail || 'Request failed')
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 30000)
+  let response
+  try {
+    response = await fetch(`${API_URL}${path}`, { ...options, headers, signal: controller.signal })
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('Request timed out. Please try again.')
+    throw new Error('Cannot connect to server. Please check if the backend is running.')
+  } finally {
+    clearTimeout(timer)
+  }
+  const payload = await response.json().catch(() => null)
+  if (!response.ok) {
+    if (response.status === 401 && headers.Authorization) handleSessionExpired()
+    throw new Error(payload?.detail || `Request failed (${response.status})`)
+  }
   return payload
 }
 
