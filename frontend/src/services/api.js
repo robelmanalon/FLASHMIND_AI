@@ -1,4 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+export function getApiUrl() {
+  return localStorage.getItem('flashmind-api-url') || import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+}
+
+export function setApiUrl(url) {
+  localStorage.setItem('flashmind-api-url', url)
+}
 
 function authHeaders() {
   const token = localStorage.getItem('flashmind-token')
@@ -19,7 +25,7 @@ async function request(path, options = {}) {
   const timer = setTimeout(() => controller.abort(), 30000)
   let response
   try {
-    response = await fetch(`${API_URL}${path}`, { ...options, headers, signal: controller.signal })
+    response = await fetch(`${getApiUrl()}${path}`, { ...options, headers, signal: controller.signal })
   } catch (err) {
     if (err.name === 'AbortError') throw new Error('Request timed out. Please try again.')
     throw new Error('Cannot connect to server. Please check if the backend is running.')
@@ -43,7 +49,7 @@ export function getProfile() { return request('/profile') }
 export function updateProfile(data) { return request('/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }) }
 
 export async function getHealth() {
-  const response = await fetch(`${API_URL}/health`)
+  const response = await fetch(`${getApiUrl()}/health`)
   if (!response.ok) throw new Error('API is unavailable')
   return response.json()
 }
@@ -53,14 +59,14 @@ export async function generateStudyMaterials(file, options = {}) {
   body.append('file', file)
   body.append('flashcard_count', String(options.flashcardCount || 10))
   body.append('quiz_count', String(options.quizCount || 10))
-  const response = await fetch(`${API_URL}/ai/generate`, { method: 'POST', body })
+  const response = await fetch(`${getApiUrl()}/ai/generate`, { method: 'POST', body })
   const payload = await response.json()
   if (!response.ok) throw new Error(payload.detail || 'Could not generate study materials')
   return payload
 }
 
 export async function recordStudyReview(flashcardId, rating, responseTimeSeconds = null) {
-  const response = await fetch(`${API_URL}/study/review`, {
+  const response = await fetch(`${getApiUrl()}/study/review`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ flashcard_id: flashcardId, rating, response_time_seconds: responseTimeSeconds }),

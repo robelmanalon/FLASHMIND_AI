@@ -8,9 +8,9 @@ app = FastAPI(title="FlashMind AI API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    # Vite may move to the next available port when another dev server is running.
+    # Vite dev server + Capacitor native WebView origins.
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_origin_regex=r"(https?://(localhost|127\.0\.0\.1)(:\d+)?$)|(capacitor://localhost)|(ionic://localhost)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

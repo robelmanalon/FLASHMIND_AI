@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import AppLayout from '../layouts/AppLayout.vue'
 import { useAuthStore } from '../stores/auth'
 import { useUiStore } from '../stores/ui'
-import { updateProfile } from '../services/api'
+import { updateProfile, getApiUrl, setApiUrl } from '../services/api'
 
 const auth = useAuthStore()
 const ui = useUiStore()
@@ -13,6 +13,7 @@ const editAvatar = ref(auth.user?.avatar_url || '')
 const saving = ref(false)
 const saved = ref(false)
 const fileInput = ref(null)
+const serverUrl = ref(getApiUrl())
 
 const initials = computed(() => (auth.user?.name || 'Guest').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase())
 const memberSince = computed(() => {
@@ -61,6 +62,30 @@ function signOut() {
 	auth.logout()
 	window.location.href = '/login'
 }
+
+function saveServerUrl() {
+	const url = serverUrl.value.trim().replace(/\/+$/, '')
+	if (!url) {
+		ui.toast('Server URL cannot be empty', 'error')
+		return
+	}
+	const cached = localStorage.getItem('flashmind-api-url')
+	if (cached === url) {
+		ui.toast('Server URL already saved', 'info')
+		return
+	}
+	localStorage.setItem('flashmind-api-url', url)
+	if (url === import.meta.env.VITE_API_URL) {
+		localStorage.removeItem('flashmind-api-url')
+	}
+	ui.toast('Server URL saved. Reopen the app to apply.', 'success')
+}
+
+function resetServerUrl() {
+	localStorage.removeItem('flashmind-api-url')
+	serverUrl.value = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+	ui.toast('Server URL reset to default', 'success')
+}
 </script>
 
 <template>
@@ -105,6 +130,18 @@ function signOut() {
 				<div class="mt-7 flex items-center gap-3">
 					<button class="rounded-xl bg-indigo-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-50" :disabled="saving" @click="saveProfile">{{ saving ? 'Saving...' : 'Save changes' }}</button>
 					<span v-if="saved" class="text-sm font-semibold text-emerald-400">✓ Saved</span>
+				</div>
+			</section>
+
+			<section class="mt-6 rounded-3xl border border-white/10 bg-white/5 p-7">
+				<h2 class="text-lg font-bold text-white">Server Connection</h2>
+				<p class="mt-1 text-sm text-slate-400">Backend API address. Set this to your computer's LAN IP (e.g. http://192.168.10.5:8000) when using the app on a phone.</p>
+				<div class="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+					<input v-model="serverUrl" type="text" placeholder="http://192.168.x.x:8000" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 sm:max-w-md" />
+					<div class="flex shrink-0 gap-2">
+						<button class="rounded-xl bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-400" @click="saveServerUrl">Save URL</button>
+						<button class="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10" @click="resetServerUrl">Reset</button>
+					</div>
 				</div>
 			</section>
 
