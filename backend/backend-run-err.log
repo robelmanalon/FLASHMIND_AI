@@ -1,1 +1,6 @@
-C:\wamp64\www\FlashMindAI\backend\.venv\Scripts\python.exe: No module named uvicorn
+INFO:     Will watch for changes in these directories: ['C:\\wamp64\\www\\FlashMindAI\\backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [24344] using WatchFiles
+INFO:     Started server process [14028]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
